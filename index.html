@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Glow — Skin Quiz by Glow Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F9F5EE;
+    --cream-dark: #EFE9DC;
+    --terracotta: #C4694A;
+    --terracotta-light: #E8927A;
+    --terracotta-pale: #F5E3DC;
+    --sage: #7A9E7E;
+    --sage-light: #B8D4BB;
+    --sage-pale: #EAF2EB;
+    --charcoal: #2C2820;
+    --warm-brown: #5C4A38;
+    --muted: #8C7B6B;
+    --white: #FFFFFF;
+    --gold: #C4A45A;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--charcoal);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SCREEN MANAGEMENT ── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ── LANDING SCREEN ── */
+  #screen-landing {
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .landing-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 110% 20%, rgba(196,105,74,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at -10% 80%, rgba(122,158,126,0.10) 0%, transparent 60%),
+      var(--cream);
+  }
+
+  .landing-blob {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.06;
+  }
+  .blob-1 {
+    width: 500px; height: 500px;
+    background: var(--terracotta);
+    top: -150px; right: -150px;
+  }
+  .blob-2 {
+    width: 400px; height: 400px;
+    background: var(--sage);
+    bottom: -100px; left: -100px;
+  }
+
+  .landing-inner {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh;
+    padding: 48px 24px;
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    background: var(--terracotta-pale);
+    padding: 8px 18px;
+    border-radius: 50px;
+    margin-bottom: 28px;
+  }
+
+  .landing-title {
+    font-family: var(--font-display);
+    font-size: clamp(52px, 10vw, 80px);
+    font-weight: 300;
+    line-height: 0.95;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .landing-title em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  .landing-subtitle {
+    font-family: var(--font-display);
+    font-size: clamp(18px, 4vw, 26px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .landing-desc {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--warm-brown);
+    line-height: 1.7;
+    max-width: 400px;
+    margin-bottom: 40px;
+  }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .pill {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px;
+    color: var(--warm-brown);
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+    padding: 8px 16px;
+    border-radius: 50px;
+  }
+
+  .pill-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+    flex-shrink: 0;
+  }
+
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    background: var(--terracotta);
+    padding: 18px 40px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    margin-bottom: 16px;
+  }
+
+  .cta-btn:hover {
+    background: #B05C3F;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(196,105,74,0.25);
+  }
+
+  .cta-btn svg { transition: transform 0.2s; }
+  .cta-btn:hover svg { transform: translateX(4px); }
+
+  .cta-note {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .studio-name {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    z-index: 1;
+    white-space: nowrap;
+  }
+
+  /* ── QUIZ SCREEN ── */
+  #screen-quiz {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    min-height: 100vh;
+  }
+
+  .quiz-wrap {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
+  }
+
+  .back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 22px;
+    line-height: 1;
+    padding: 4px;
+    transition: color 0.2s;
+  }
+  .back-btn:hover { color: var(--charcoal); }
+
+  .quiz-logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: var(--charcoal);
+  }
+
+  .step-indicator {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .progress-bar-wrap {
+    width: 100%;
+    height: 2px;
+    background: var(--cream-dark);
+    border-radius: 2px;
+    margin-bottom: 44px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--terracotta-light), var(--terracotta));
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .question-block { animation: fadeSlideIn 0.4s ease forwards; }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 5vw, 36px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+  }
+
+  .q-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-weight: 300;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .option-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding: 18px 20px;
+    background: var(--white);
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+    min-height: 80px;
+  }
+
+  .option-btn:hover {
+    border-color: var(--terracotta-light);
+    background: var(--terracotta-pale);
+    transform: translateY(-2px);
+  }
+
+  .option-btn.selected {
+    border-color: var(--terracotta);
+    background: var(--terracotta-pale);
+    box-shadow: 0 0 0 3px rgba(196,105,74,0.12);
+  }
+
+  .option-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .option-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--charcoal);
+    margin-bottom: 2px;
+  }
+
+  .option-desc {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .next-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--terracotta);
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: var(--transition);
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .next-btn.enabled {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .next-btn.enabled:hover {
+    background: #B05C3F;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(196,105,74,0.3);
+  }
+
+  /* ── LEAD CAPTURE SCREEN ── */
+  #screen-capture {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    min-height: 100vh;
+  }
+
+  .capture-wrap {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+  }
+
+  .capture-icon {
+    width: 72px; height: 72px;
+    background: var(--terracotta-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 32px;
+  }
+
+  .capture-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 6vw, 44px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--charcoal);
+    margin-bottom: 12px;
+  }
+
+  .capture-title em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  .capture-desc {
+    font-size: 15px;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 36px;
+  }
+
+  .form-group {
+    position: relative;
+    margin-bottom: 14px;
+    text-align: left;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 16px 20px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--charcoal);
+    background: var(--white);
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .form-input:focus {
+    border-color: var(--terracotta);
+    box-shadow: 0 0 0 4px rgba(196,105,74,0.10);
+  }
+
+  .form-input::placeholder { color: var(--cream-dark); }
+
+  .privacy-note {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: left;
+    margin: 16px 0 24px;
+    padding: 12px 16px;
+    background: var(--sage-pale);
+    border-radius: 10px;
+  }
+
+  .privacy-note svg { flex-shrink: 0; margin-top: 1px; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--terracotta);
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .submit-btn:hover {
+    background: #B05C3F;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(196,105,74,0.3);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  /* ── RESULTS SCREEN ── */
+  #screen-results {
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .results-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 100% 0%, rgba(196,105,74,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 0% 100%, rgba(122,158,126,0.08) 0%, transparent 60%),
+      var(--cream);
+  }
+
+  .results-inner {
+    position: relative; z-index: 1;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .results-greeting {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 10px;
+  }
+
+  .results-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 7vw, 56px);
+    font-weight: 300;
+    line-height: 1.0;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+  }
+
+  .results-title em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  .skin-type-badge {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--terracotta);
+    background: var(--terracotta-pale);
+    padding: 10px 28px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(196,105,74,0.2);
+  }
+
+  .results-desc {
+    font-size: 15px;
+    color: var(--warm-brown);
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 36px;
+    text-align: center;
+  }
+
+  .trait-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .trait-card {
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .trait-icon { font-size: 20px; margin-bottom: 8px; }
+
+  .trait-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .trait-value {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--charcoal);
+  }
+
+  .recommendation-card {
+    background: var(--terracotta);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 24px;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .recommendation-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+
+  .rec-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 10px;
+  }
+
+  .rec-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  .rec-desc {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 20px;
+  }
+
+  .rec-value {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .offer-card {
+    background: var(--white);
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 16px;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .offer-emoji { font-size: 32px; flex-shrink: 0; }
+
+  .offer-content {}
+  .offer-title {
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--charcoal);
+    margin-bottom: 4px;
+  }
+  .offer-sub {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .whatsapp-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 18px;
+    background: #25D366;
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    margin-bottom: 12px;
+  }
+
+  .whatsapp-btn:hover {
+    background: #1ea855;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37,211,102,0.3);
+  }
+
+  .share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px;
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .share-btn:hover {
+    border-color: var(--terracotta-light);
+    color: var(--terracotta);
+  }
+
+  .results-footer {
+    text-align: center;
+    margin-top: 32px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 420px) {
+    .options-grid { grid-template-columns: 1fr; }
+    .trait-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── LOADING STATE ── */
+  .loading-screen {
+    display: none;
+    position: fixed; inset: 0;
+    background: var(--cream);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .loading-screen.active { display: flex; }
+
+  .loader-ring {
+    width: 48px; height: 48px;
+    border: 2px solid var(--cream-dark);
+    border-top-color: var(--terracotta);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loader-text {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-style: italic;
+    color: var(--muted);
+    font-weight: 300;
+  }
+</style>
+</head>
+<body>
+
+<!-- Loading screen -->
+<div class="loading-screen" id="loading">
+  <div class="loader-ring"></div>
+  <p class="loader-text">Analysing your skin profile…</p>
+</div>
+
+<!-- ──────────────────── SCREEN 1: LANDING ──────────────────── -->
+<div class="screen active" id="screen-landing">
+  <div class="landing-bg">
+    <div class="landing-blob blob-1"></div>
+    <div class="landing-blob blob-2"></div>
+  </div>
+  <div class="landing-inner">
+    <span class="badge">✦ Free Skin Analysis</span>
+    <h1 class="landing-title">Find Your<br><em>Glow</em></h1>
+    <p class="landing-subtitle">Your skin is trying to tell you something.</p>
+    <p class="landing-desc">
+      Take our 60-second quiz and discover your unique skin type — plus a personalised treatment recommendation from our expert therapists.
+    </p>
+    <div class="pill-row">
+      <span class="pill"><span class="pill-dot"></span>Only 5 questions</span>
+      <span class="pill"><span class="pill-dot"></span>Personalised results</span>
+      <span class="pill"><span class="pill-dot"></span>Free treatment advice</span>
+    </div>
+    <button class="cta-btn" onclick="startQuiz()">
+      Start the Quiz
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <p class="cta-note">No spam. Just results.</p>
+  </div>
+  <span class="studio-name">Glow Studio · Skincare Specialists</span>
+</div>
+
+<!-- ──────────────────── SCREEN 2: QUIZ ──────────────────── -->
+<div class="screen" id="screen-quiz">
+  <div class="quiz-wrap">
+    <div class="quiz-header">
+      <button class="back-btn" onclick="goBack()" title="Back">←</button>
+      <span class="quiz-logo">Glow Studio</span>
+      <span class="step-indicator" id="step-indicator">1 / 5</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar" style="width:20%"></div>
+    </div>
+    <div id="question-container"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Continue →</button>
+  </div>
+</div>
+
+<!-- ──────────────────── SCREEN 3: LEAD CAPTURE ──────────────────── -->
+<div class="screen" id="screen-capture">
+  <div class="capture-wrap">
+    <div class="capture-icon">✨</div>
+    <h2 class="capture-title">Your results<br>are <em>ready</em></h2>
+    <p class="capture-desc">Enter your details to receive your personalised skin report and a special offer from Glow Studio.</p>
+
+    <div class="form-group">
+      <label class="form-label" for="field-name">Your First Name</label>
+      <input class="form-input" type="text" id="field-name" placeholder="e.g. Priya" autocomplete="given-name" />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="field-phone">WhatsApp / Phone Number</label>
+      <input class="form-input" type="tel" id="field-phone" placeholder="e.g. +91 98765 43210" autocomplete="tel" />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="field-email">Email Address (optional)</label>
+      <input class="form-input" type="email" id="field-email" placeholder="you@gmail.com" autocomplete="email" />
+    </div>
+
+    <div class="privacy-note">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-top:1px">
+        <path d="M7 1L2 3.5V7c0 2.76 2.04 5.18 5 5.82C10.96 12.18 13 9.76 13 7V3.5L7 1z" stroke="#7A9E7E" stroke-width="1.2" fill="none"/>
+        <path d="M5 7l1.5 1.5L9.5 5" stroke="#7A9E7E" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <span>We take your privacy seriously. Your details are only used to send you your skin results and will never be shared with third parties.</span>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitLead()">
+      Show Me My Results →
+    </button>
+  </div>
+</div>
+
+<!-- ──────────────────── SCREEN 4: RESULTS ──────────────────── -->
+<div class="screen" id="screen-results">
+  <div class="results-bg"></div>
+  <div class="results-inner">
+    <div class="results-header">
+      <p class="results-greeting" id="results-greeting">Hello, Priya 👋</p>
+      <h2 class="results-title">You have<br><em id="results-skin-name">Combination</em> skin</h2>
+    </div>
+    <div class="skin-type-badge" id="results-badge">Combination Type</div>
+    <p class="results-desc" id="results-desc">Your skin needs balance — controlling oil where it builds up while keeping dry areas nourished.</p>
+
+    <div class="trait-grid" id="trait-grid"></div>
+
+    <div class="recommendation-card">
+      <p class="rec-tag">✦ Your Recommended Treatment</p>
+      <h3 class="rec-title" id="rec-title">Balancing Facial</h3>
+      <p class="rec-desc" id="rec-desc">A targeted treatment that regulates oil production, hydrates dry zones, and leaves your skin in harmony.</p>
+      <span class="rec-value">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="white" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+        60 min · ₹2,499 <span style="opacity:0.7; text-decoration:line-through; margin-left:4px">₹3,200</span>
+      </span>
+    </div>
+
+    <div class="offer-card">
+      <span class="offer-emoji">🎁</span>
+      <div class="offer-content">
+        <p class="offer-title">Exclusive quiz offer: 20% off your first visit</p>
+        <p class="offer-sub">Valid for 7 days · Mention "GLOW QUIZ" at booking</p>
+      </div>
+    </div>
+
+    <a class="whatsapp-btn" id="whatsapp-link" href="#" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      Book My Treatment on WhatsApp
+    </a>
+
+    <button class="share-btn" onclick="shareResults()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="13" cy="3" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="3" cy="8" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="13" cy="13" r="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7.3L11.5 4M4.5 8.7L11.5 12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Share my skin results
+    </button>
+
+    <div class="results-footer">
+      <p>Glow Studio · DM us <strong>@glowstudio</strong> on Instagram</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── QUIZ DATA ──
+  const questions = [
+    {
+      number: "01",
+      text: "How does your skin feel by midday?",
+      sub: "Without touching it — just how it naturally settles",
+      options: [
+        { icon: "☀️", label: "Shiny all over", desc: "T-zone and cheeks both oily", value: "oily" },
+        { icon: "⚖️", label: "Shiny in patches", desc: "Oily T-zone, normal elsewhere", value: "combination" },
+        { icon: "🌊", label: "Normal and balanced", desc: "No shine, no tightness", value: "normal" },
+        { icon: "🍂", label: "Tight or flaky", desc: "Dry, sometimes uncomfortable", value: "dry" }
+      ]
+    },
+    {
+      number: "02",
+      text: "How often do breakouts happen?",
+      sub: "Think of the last 3 months",
+      options: [
+        { icon: "🌸", label: "Rarely or never", desc: "Pretty clear most of the time", value: "clear" },
+        { icon: "📅", label: "Around my period", desc: "Hormonal and predictable", value: "hormonal" },
+        { icon: "⚡", label: "Fairly often", desc: "Multiple spots per month", value: "frequent" },
+        { icon: "🔥", label: "Almost always", desc: "Ongoing breakouts or acne", value: "acne" }
+      ]
+    },
+    {
+      number: "03",
+      text: "What bothers you most about your skin?",
+      sub: "Pick the one that feels most urgent",
+      options: [
+        { icon: "😴", label: "Dullness", desc: "Lacking glow, looks tired", value: "dull" },
+        { icon: "😤", label: "Breakouts & pores", desc: "Congestion, spots, large pores", value: "acne-concern" },
+        { icon: "💧", label: "Dryness", desc: "Rough texture, flaking, tightness", value: "dry-concern" },
+        { icon: "🕰️", label: "Fine lines & aging", desc: "Early signs of aging, loss of plump", value: "aging" }
+      ]
+    },
+    {
+      number: "04",
+      text: "How does your skin react to new products?",
+      sub: "Your honest gut reaction",
+      options: [
+        { icon: "✅", label: "Fine mostly", desc: "I can try new things easily", value: "tolerant" },
+        { icon: "😬", label: "Sometimes reacts", desc: "Occasional redness or irritation", value: "mild-sensitive" },
+        { icon: "🚨", label: "Quite sensitive", desc: "Redness, stinging, or bumps often", value: "sensitive" },
+        { icon: "🤷", label: "Depends on the product", desc: "Hard to predict", value: "unpredictable" }
+      ]
+    },
+    {
+      number: "05",
+      text: "What's your current skincare routine?",
+      sub: "Be honest — this helps us give better advice",
+      options: [
+        { icon: "🪣", label: "Just water or soap", desc: "Minimal to nothing right now", value: "none" },
+        { icon: "🧴", label: "Cleanser + moisturiser", desc: "The basics covered", value: "basic" },
+        { icon: "📦", label: "Multiple steps", desc: "Serum, SPF, eye cream etc.", value: "full" },
+        { icon: "🛍️", label: "Everything but nothing works", desc: "Tried it all, frustrated", value: "overwhelmed" }
+      ]
+    }
+  ];
+
+  // ── RESULTS ENGINE ──
+  const skinProfiles = {
+    oily_acne: {
+      name: "Oily & Acne-Prone",
+      badge: "Oily · Acne-Prone",
+      desc: "Your skin produces excess sebum, which can lead to congested pores, shine, and breakouts. The good news — with the right targeted care, this skin type responds beautifully.",
+      traits: [
+        { icon: "💦", label: "Sebum level", value: "High" },
+        { icon: "⚡", label: "Sensitivity", value: "Moderate" },
+        { icon: "🎯", label: "Main concern", value: "Congestion" },
+        { icon: "🌟", label: "Skin potential", value: "High glow" }
+      ],
+      rec: { title: "Purifying Deep Cleanse Facial", desc: "Unclogs pores, controls oil, and fades post-breakout marks. Using salicylic and AHA actives tailored to your skin." }
+    },
+    combination: {
+      name: "Combination",
+      badge: "Combination Type",
+      desc: "Your skin is playing two games at once — oily in the T-zone, dry or normal on the cheeks. Balance is your goal, and it's absolutely achievable.",
+      traits: [
+        { icon: "⚖️", label: "Sebum level", value: "Mixed zones" },
+        { icon: "🌊", label: "Hydration", value: "Uneven" },
+        { icon: "🎯", label: "Main concern", value: "Balance" },
+        { icon: "🌟", label: "Skin potential", value: "Natural radiance" }
+      ],
+      rec: { title: "Zone Balancing Facial", desc: "Treats oily and dry areas separately in one session. Regulates T-zone while deeply nourishing dry patches." }
+    },
+    dry_sensitive: {
+      name: "Dry & Sensitive",
+      badge: "Dry · Sensitive",
+      desc: "Your skin barrier needs extra love. Dryness, reactivity, and tightness are your main challenges — but the right nourishing routine will transform how your skin feels and looks.",
+      traits: [
+        { icon: "💧", label: "Hydration", value: "Low" },
+        { icon: "🌸", label: "Sensitivity", value: "High" },
+        { icon: "🎯", label: "Main concern", value: "Barrier repair" },
+        { icon: "🌟", label: "Skin potential", value: "Soft & dewy" }
+      ],
+      rec: { title: "Moisture Restore Facial", desc: "Replenishes your skin barrier with hyaluronic acid and ceramide-rich actives. Calms redness and seals in lasting hydration." }
+    },
+    normal_glow: {
+      name: "Normal / Glow-Ready",
+      badge: "Normal · Glow-Ready",
+      desc: "You have a great foundation to work with. Your skin is well-balanced — now it's time to unlock its full radiance with targeted glow-boosting care.",
+      traits: [
+        { icon: "✨", label: "Balance", value: "Good" },
+        { icon: "🌿", label: "Sensitivity", value: "Low" },
+        { icon: "🎯", label: "Main concern", value: "Radiance" },
+        { icon: "🌟", label: "Skin potential", value: "Full glow" }
+      ],
+      rec: { title: "Vitamin C Glow Facial", desc: "Brightens, evens skin tone, and delivers an immediate radiance boost. Perfect for skin that just needs that extra luminosity." }
+    }
+  };
+
+  function getSkinProfile(answers) {
+    const [skinFeel, breakout, concern, reactivity] = answers;
+    if (skinFeel === 'oily' || breakout === 'acne' || breakout === 'frequent') return skinProfiles.oily_acne;
+    if (skinFeel === 'dry' || reactivity === 'sensitive' || concern === 'dry-concern') return skinProfiles.dry_sensitive;
+    if (skinFeel === 'combination' || concern === 'acne-concern') return skinProfiles.combination;
+    return skinProfiles.normal_glow;
+  }
+
+  // ── STATE ──
+  let currentQ = 0;
+  let answers = [];
+  let selectedValue = null;
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startQuiz() {
+    currentQ = 0;
+    answers = [];
+    showScreen('screen-quiz');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = questions[currentQ];
+    selectedValue = null;
+
+    document.getElementById('step-indicator').textContent = `${currentQ + 1} / ${questions.length}`;
+    document.getElementById('progress-bar').style.width = `${((currentQ + 1) / questions.length) * 100}%`;
+
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.classList.remove('enabled');
+
+    const container = document.getElementById('question-container');
+    container.innerHTML = `
+      <div class="question-block">
+        <p class="q-number">Question ${q.number}</p>
+        <h2 class="q-text">${q.text}</h2>
+        <p class="q-sub">${q.sub}</p>
+        <div class="options-grid">
+          ${q.options.map(o => `
+            <button class="option-btn" data-value="${o.value}" onclick="selectOption(this, '${o.value}')">
+              <span class="option-icon">${o.icon}</span>
+              <span class="option-label">${o.label}</span>
+              <span class="option-desc">${o.desc}</span>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function selectOption(el, value) {
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedValue = value;
+    document.getElementById('next-btn').classList.add('enabled');
+  }
+
+  function nextQuestion() {
+    if (!selectedValue) return;
+    answers.push(selectedValue);
+    currentQ++;
+    if (currentQ < questions.length) {
+      renderQuestion();
+    } else {
+      showScreen('screen-capture');
+    }
+  }
+
+  function goBack() {
+    if (currentQ > 0) {
+      currentQ--;
+      answers.pop();
+      renderQuestion();
+    } else {
+      showScreen('screen-landing');
+    }
+  }
+
+  function submitLead() {
+    const name = document.getElementById('field-name').value.trim();
+    const phone = document.getElementById('field-phone').value.trim();
+
+    if (!name) { document.getElementById('field-name').focus(); return; }
+    if (!phone) { document.getElementById('field-phone').value = ''; document.getElementById('field-phone').focus(); return; }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Preparing your results…';
+
+    // Show loading
+    const loading = document.getElementById('loading');
+    loading.classList.add('active');
+
+    // Simulate processing
+    setTimeout(() => {
+      loading.classList.remove('active');
+      showResults(name, phone);
+    }, 2200);
+  }
+
+  function showResults(name, phone) {
+    const profile = getSkinProfile(answers);
+
+    document.getElementById('results-greeting').textContent = `Hello, ${name} ✨`;
+    document.getElementById('results-skin-name').textContent = profile.name.split('/')[0].trim();
+    document.getElementById('results-badge').textContent = profile.badge;
+    document.getElementById('results-desc').textContent = profile.desc;
+    document.getElementById('rec-title').textContent = profile.rec.title;
+    document.getElementById('rec-desc').textContent = profile.rec.desc;
+
+    const traitGrid = document.getElementById('trait-grid');
+    traitGrid.innerHTML = profile.traits.map(t => `
+      <div class="trait-card">
+        <div class="trait-icon">${t.icon}</div>
+        <p class="trait-label">${t.label}</p>
+        <p class="trait-value">${t.value}</p>
+      </div>
+    `).join('');
+
+    const cleanPhone = phone.replace(/\D/g, '');
+    const msg = encodeURIComponent(`Hi Glow Studio! 🌸 I just took the skin quiz and got "${profile.name}" skin type. I'd love to book the "${profile.rec.title}" with my 20% quiz discount. Can you help me find a slot?`);
+    document.getElementById('whatsapp-link').href = `https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${msg}`;
+
+    showScreen('screen-results');
+  }
+
+  function shareResults() {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Find Your Glow — Free Skin Quiz',
+        text: 'I just discovered my skin type! Take the free quiz at Glow Studio.',
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('Link copied to clipboard!');
+      });
+    }
+  }
+</script>
+</body>
+</html>
