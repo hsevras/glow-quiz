@@ -1158,7 +1158,7 @@
       </div>
     `).join('');
 
-    const cleanPhone = phone.replace(/\D/g, '');
+    const cleanPhone = "918275462285"; // your salon number
     const msg = encodeURIComponent(`Hi Glow Studio! 🌸 I just took the skin quiz and got "${profile.name}" skin type. I'd love to book the "${profile.rec.title}" with my 20% quiz discount. Can you help me find a slot?`);
     document.getElementById('whatsapp-link').href = `https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${msg}`;
 
